@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FINANCING_OPTIONS } from '../config/rates';
+import { maskCurrency, currencyToNumber } from '../lib/masks';
 
 export default function Calculator({ onSimulate }) {
     const [formData, setFormData] = useState({
@@ -12,9 +13,16 @@ export default function Calculator({ onSimulate }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        let finalValue = value;
+
+        if (name === 'amount') {
+            finalValue = maskCurrency(value);
+        }
+
         setFormData((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: finalValue,
         }));
     };
 
@@ -25,7 +33,7 @@ export default function Calculator({ onSimulate }) {
         // Pass data back to parent
         onSimulate({
             source: FINANCING_OPTIONS.sources[parseInt(formData.sourceIndex)],
-            amount: parseFloat(formData.amount),
+            amount: currencyToNumber(formData.amount),
             term: FINANCING_OPTIONS.terms[parseInt(formData.termIndex)],
         });
     };
@@ -60,7 +68,7 @@ export default function Calculator({ onSimulate }) {
                         Valor do Investimento (R$)
                     </label>
                     <input
-                        type="number"
+                        type="text"
                         name="amount"
                         value={formData.amount}
                         onChange={handleChange}
@@ -68,6 +76,7 @@ export default function Calculator({ onSimulate }) {
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all bg-gray-50"
                         min="1000"
                         required
+                        maxLength={18}
                     />
                 </div>
 

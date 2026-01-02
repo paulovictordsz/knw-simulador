@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { maskCNPJ, maskPhone, maskCurrency } from '../lib/masks';
 
 export default function LeadForm({ onSubmit, isUnlocking }) {
     const [formData, setFormData] = useState({
@@ -19,9 +20,20 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        let finalValue = value;
+
+        if (name === 'cnpj') {
+            finalValue = maskCNPJ(value);
+        } else if (name === 'telefone') {
+            finalValue = maskPhone(value);
+        } else if (name === 'faturamento_aprox') {
+            finalValue = maskCurrency(value);
+        }
+
         setFormData((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: finalValue,
         }));
     };
 
@@ -45,6 +57,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="razao_social"
+                            value={formData.razao_social}
                             placeholder="Razão Social"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -53,14 +66,17 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="cnpj"
+                            value={formData.cnpj}
                             placeholder="CNPJ"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
                             required
+                            maxLength={18}
                         />
                         <input
                             type="text"
                             name="segmento"
+                            value={formData.segmento}
                             placeholder="Segmento (ex: Indústria)"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -68,13 +84,16 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="faturamento_aprox"
+                            value={formData.faturamento_aprox}
                             placeholder="Faturamento Anual Aprox."
                             onChange={handleChange}
+                            maxLength={18}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
                         />
                         <input
                             type="number"
                             name="num_colaboradores"
+                            value={formData.num_colaboradores}
                             placeholder="Nº Colaboradores"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -89,6 +108,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="tipo_investimento"
+                            value={formData.tipo_investimento}
                             placeholder="Tipo de Investimento (ex: Máquinas)"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -96,6 +116,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="localizacao_projeto"
+                            value={formData.localizacao_projeto}
                             placeholder="Localização do Projeto (Cidade/UF)"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -110,6 +131,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="nome_responsavel"
+                            value={formData.nome_responsavel}
                             placeholder="Seu Nome"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -118,6 +140,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="text"
                             name="cargo"
+                            value={formData.cargo}
                             placeholder="Seu Cargo"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -125,6 +148,7 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="email"
                             name="email"
+                            value={formData.email}
                             placeholder="E-mail Corporativo"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
@@ -133,10 +157,12 @@ export default function LeadForm({ onSubmit, isUnlocking }) {
                         <input
                             type="tel"
                             name="telefone"
+                            value={formData.telefone}
                             placeholder="Telefone/WhatsApp"
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none"
                             required
+                            maxLength={15}
                         />
                     </div>
                 </div>
